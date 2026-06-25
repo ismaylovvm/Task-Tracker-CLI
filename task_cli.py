@@ -70,7 +70,7 @@ if argümanlar[1] == "add":
 
     file_operations.gorevleri_kaydet(mevcut_gorevler)
 
-
+                    
 
 
 
@@ -78,10 +78,6 @@ if argümanlar[1] == "add":
 elif argümanlar[1] == "list":
 
     # Farklı durumlara göre listeleme
-
-    if len(argümanlar) < 3:
-        print("Lutfen komutlari dogru giriniz")
-        sys.exit(1)
 
 
     mevcut_gorevler = file_operations.gorevleri_getir()
@@ -114,26 +110,54 @@ elif argümanlar[1] == "list":
         for gorev in mevcut_gorevler:
                 print(f"ID: {gorev['id']} | Durum: {gorev['status']} | Görev: {gorev['description']}")
 
-    
-
-
-
-
-
-
-       
 
 
 elif argümanlar[1] == "update":
-    print("güncelleme işlemi yapilacak")
+
+    mevcut_gorevler = file_operations.gorevleri_getir()
+
+    flag = 0
+
+    istek_id = sys.argv[2]
+    guncel_durum = sys.argv[3]
+
+    for gorev in mevcut_gorevler:
+
+        if gorev["id"] == int(istek_id):
+            gorev["status"] = guncel_durum
+            gorev["description"] = sys.argv[3]
+            gorev["updatedAt"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            flag = 1
+       
+    if flag == 0:
+        print("Bu id ile kayitli görev bulunamadi...")
+        sys.exit(1)
+
+    file_operations.gorevleri_kaydet(mevcut_gorevler)
+
+
+
 
     
 elif argümanlar[1] == "delete":
-    print("Silme işlemi yapilacak")
 
-else:
-    print("Bilinmeyen komut girildi")
+    istek_id = sys.argv[2]
 
+    flag = 0
+
+    mevcut_gorevler = file_operations.gorevleri_getir()
+
+    for gorev in mevcut_gorevler:
+        if gorev["id"] == int(istek_id):
+            mevcut_gorevler.remove(gorev)
+            flag = 1
+    file_operations.gorevleri_kaydet(mevcut_gorevler)
+
+    if flag == 0:
+        print("Dogru id giriniz")
+        sys.exit(1)
+
+    
     
 
 
